@@ -35,7 +35,8 @@
     .hero-cta:hover {transform:translateY(-3px)}
     .hero-note {font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:#ffeac7;margin-top:24px}
     .art-wrap {position:relative;min-width:0}
-    .art-wrap img {width:112%;max-width:600px;display:block;margin:auto;filter:drop-shadow(0 22px 18px rgba(77,20,10,.28))}
+    .art-wrap img:not(.star-badge) {width:112%;max-width:600px;display:block;margin:auto;filter:drop-shadow(0 22px 18px rgba(77,20,10,.28))}
+    .star-badge {position:absolute;left:-30px;top:-82px;width:230px;max-width:none;height:auto;transform:rotate(-6deg);filter:drop-shadow(0 8px 8px rgba(77,20,10,.25));z-index:3}
     .twinkle {position:absolute;font-size:27px;color:#ffeda3}
     .twinkle.t1{right:6px;bottom:18px}.twinkle.t2{left:-6px;top:22px}
     .ribbon {background:#00acdb;color:#ffefba;text-align:center;padding:14px 12px;font-weight:900;letter-spacing:2.1px;text-transform:uppercase;font-size:12px}
@@ -97,7 +98,7 @@
     @media(max-width:870px){.hero-flex{grid-template-columns:1fr 1fr}.hero h1{font-size:clamp(55px,8vw,85px)}.app{grid-template-columns:1fr}.form-card,.result-card{max-width:660px;width:100%;margin:auto}.result-card{min-height:0}.result-main{padding-bottom:26px}}
     @media(max-width:640px){.wide{padding:0 18px}.hero{min-height:0}.nav{min-height:77px}.nav-tag{font-size:9px;padding:8px 10px;letter-spacing:.8px}.hero-flex{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding-top:35px;padding-bottom:44px}.eyebrow{font-size:10px;margin-bottom:15px}.hero h1{font-size:clamp(43px,12vw,65px);margin-bottom:15px}.intro{font-size:16px;max-width:340px;margin:0 auto 18px}.hero-note{margin-top:17px;font-size:9px}.art-wrap{width:min(370px,97%);margin-top:5px}.art-wrap svg{width:100%;max-width:390px}.ribbon{font-size:9px;letter-spacing:1px;padding:13px 6px}.form-section{padding:56px 0 65px}.section-heading h2{font-size:43px}.section-heading p{font-size:14px}.form-card{padding:23px 20px;border-radius:19px}.form-card h3{font-size:25px}.row-halves{grid-template-columns:1fr}.field{margin-bottom:21px}.result-main{padding:26px 24px 21px}.result-title{font-size:36px}.total-strip{padding:18px 24px}.order-bottom{padding:22px 23px 25px}.steps{grid-template-columns:1fr;gap:12px}.step{padding:17px;display:grid;grid-template-columns:45px 1fr;column-gap:15px;text-align:left}.step .num{grid-row:span 2;margin:0}.step strong{margin:1px 0 5px}.step p{grid-column:2}.how{padding-bottom:65px}.footer-content{flex-direction:column;align-items:flex-start}.footer span{line-height:1.45}}
     @media(max-width:870px){.hero-title{max-width:440px}}
-    @media(max-width:640px){.brand-tab{width:104px;height:52px;padding-top:8px}.brand-tab img{width:78px}.nav{min-height:70px}.nav-tag{margin-top:16px}.hero-title{margin:0 auto 16px;max-width:340px}.hero-flex>div:first-child{display:flex;flex-direction:column;align-items:center}.art-wrap img{width:100%}.twinkle.t2{left:4px}}
+    @media(max-width:640px){.brand-tab{width:104px;height:52px;padding-top:8px}.brand-tab img{width:78px}.nav{min-height:70px}.nav-tag{margin-top:16px}.hero-title{margin:0 auto 16px;max-width:340px}.hero-flex>div:first-child{display:flex;flex-direction:column;align-items:center}.art-wrap img:not(.star-badge){width:100%}.art-wrap .star-badge{width:140px;left:-8px;top:-24px}.twinkle.t2{display:none}.twinkle.t2{left:4px}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-cta,.pill,.wa-btn{transition:none}}
   </style>
 </head>
@@ -119,6 +120,7 @@
         <div class="art-wrap">
           <span class="twinkle t1">✦</span><span class="twinkle t2">✳</span>
           <img src="assets/empanadas.webp" alt="Plato de empanaditas de pipián">
+          <img class="star-badge" src="assets/estrella.png" alt="Listas en 5 minutos y a disfrutar">
         </div>
       </div>
     </header>
@@ -229,11 +231,38 @@
       for (const p of items) count.set(p.units,(count.get(p.units)||0)+1);
       return [...count].sort((a,b)=>b[0]-a[0]).map(([u,n])=>`${n} ${n===1?'paquete':'paquetes'} de ${u} unidades`).join(' + ');
     }
+    const OCASION_EMOJI = {
+      "una novena navideña":"🎄",
+      "una reunión familiar":"👨‍👩‍👧‍👦",
+      "una celebración":"🎉",
+      "un pedido para compartir en casa":"🥟"
+    };
+    const ENTREGA_TEXTO = {
+      "por definir":{emoji:"📍", texto:"por definir"},
+      "recoger":{emoji:"🚶", texto:"recoger en el punto"},
+      "domicilio":{emoji:"🛵", texto:"domicilio"}
+    };
     function buildMessage(people,required,recommendation) {
       const date=$("fecha").value;
-      const when = date ? new Date(date+'T12:00:00').toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'}):'por definir';
+      const when = date ? new Date(date+'T12:00:00').toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'por definir';
       const name=$("nombre").value.trim();
-      return `¡Hola, Donde mi Amá! 🥟❤️${name?`\nSoy ${name}.`:''}\n\nQuiero consultar un pedido para ${$("ocasion").value}.\n👨‍👩‍👧‍👦 Personas: ${people}\n🥟 Estimación: ${rate} empanaditas por persona (${required} en total)\n📦 Combo sugerido: ${summarize(recommendation.items)} (${recommendation.units} empanaditas)\n💰 Precio estimado: ${peso(recommendation.price)}\n📅 Fecha: ${when}\n📍 Entrega: ${$("entrega").value}\n\n¿Me confirman disponibilidad y el valor final con entrega, si aplica?`;
+      const ocasion=$("ocasion").value;
+      const entrega=ENTREGA_TEXTO[$("entrega").value]||ENTREGA_TEXTO["por definir"];
+      return [
+        `¡Hola, Donde mi Amá! 👋🥟`,
+        name ? `Soy ${name}.` : null,
+        ``,
+        `Quiero consultar un pedido para ${ocasion}. ${OCASION_EMOJI[ocasion]||"🥟"}`,
+        ``,
+        `👥 Personas: ${people}`,
+        `🥟 Estimación: ${rate} empanaditas por persona (${required} en total)`,
+        `📦 Combo sugerido: ${summarize(recommendation.items)} (${recommendation.units} empanaditas)`,
+        `💰 Precio estimado: ${peso(recommendation.price)}`,
+        `📅 Fecha: ${when}`,
+        `${entrega.emoji} Entrega: ${entrega.texto}`,
+        ``,
+        `¿Me confirman disponibilidad y el valor final con entrega, si aplica? 🙏`
+      ].filter(l=>l!==null).join("\n");
     }
     function update() {
       const raw=Number.parseInt($("invitados").value,10);
@@ -264,7 +293,10 @@
     $("pedir").addEventListener('click',async()=>{
       const phone=WHATSAPP_NUMBER.replace(/\D/g,'');
       if(phone.length>=10 && phone.length<=15){
-        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lastMessage)}`,'_blank','noopener,noreferrer');
+        const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const base=isMobile?`https://wa.me/${phone}`:`https://web.whatsapp.com/send?phone=${phone}`;
+        const sep=isMobile?'?':'&';
+        window.open(`${base}${sep}text=${encodeURIComponent(lastMessage)}`,'_blank','noopener,noreferrer');
       }else{
         await copyMessage();
         $("aviso-config").classList.add('show');
