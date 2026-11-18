@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#c62e28">
+  <meta name="description" content="Arma tu Empanovena con Donde mi Amá. Calcula cuántas empanaditas de pipián necesitas y solicita tu pedido por WhatsApp.">
+  <title>Arma tu Empanovena · Donde mi Amá</title>
+  <style>
+    :root {
+      --rojo: #c52e2a; --rojo-vivo:#ed5040; --vino:#692022;
+      --crema:#fff8ec; --amarillo:#ffd778; --verde:#174f40; --cafe:#47241e;
+      --sombra:0 24px 70px rgba(86,29,19,.15);
+    }
+    *,*::before,*::after {box-sizing:border-box}
+    html {scroll-behavior:smooth}
+    body {margin:0;background:var(--crema);font-family:"Trebuchet MS",Arial,sans-serif;color:var(--cafe);line-height:1.48}
+    button,input,select {font:inherit}
+    button {cursor:pointer}
+    .site-shell {overflow:hidden;position:relative}
+    .wide {max-width:1100px;margin:0 auto;padding:0 26px}
+    .hero {background:#e76163;color:#fff8ec;position:relative;min-height:560px;overflow:hidden}
+    .hero::before {content:"";position:absolute;inset:0;opacity:.14;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:22px 22px;pointer-events:none}
+    .hero::after {content:"";position:absolute;left:-5%;right:-5%;bottom:-3px;height:34px;background:var(--crema);border-radius:50% 50% 0 0 / 100% 100% 0 0}
+    .nav {min-height:96px;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;position:relative;z-index:5}
+    .brand {display:block;text-decoration:none;margin-top:-1px}
+    .brand-tab {width:134px;height:67px;background:#fff;border-radius:0 0 134px 134px;display:flex;align-items:flex-start;justify-content:center;padding-top:10px}
+    .brand-tab img {width:92px;height:auto;display:block}
+    .nav-tag {margin-top:22px;font-weight:800;letter-spacing:1.8px;font-size:12px;text-transform:uppercase;border:1px solid #ffdca7;border-radius:25px;padding:10px 18px;color:#ffeac3}
+    .hero-flex {display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:28px;padding-top:6px;padding-bottom:92px;position:relative;z-index:2}
+    .eyebrow {display:inline-block;background:#0db9e7;color:#fff;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:2px;line-height:1.3;padding:8px 13px;transform:rotate(-2deg);margin-bottom:18px;box-shadow:3px 4px 0 rgba(96,13,13,.2)}
+    .hero-title {display:block;width:100%;max-width:520px;height:auto;margin:0 0 20px}
+    .intro {font-size:clamp(16px,1.7vw,20px);font-weight:700;max-width:520px;margin:0 0 27px;color:#fff3e4}
+    .hero-cta {display:inline-flex;align-items:center;gap:12px;border-radius:50px;padding:14px 20px;background:#ffedbc;color:#77231f;font-weight:900;text-decoration:none;box-shadow:0 6px 0 rgba(80,14,18,.22);transition:transform .2s}
+    .hero-cta:hover {transform:translateY(-3px)}
+    .hero-note {font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:#ffeac7;margin-top:24px}
+    .art-wrap {position:relative;min-width:0}
+    .art-wrap img {width:112%;max-width:600px;display:block;margin:auto;filter:drop-shadow(0 22px 18px rgba(77,20,10,.28))}
+    .twinkle {position:absolute;font-size:27px;color:#ffeda3}
+    .twinkle.t1{right:6px;bottom:18px}.twinkle.t2{left:-6px;top:22px}
+    .ribbon {background:#00acdb;color:#ffefba;text-align:center;padding:14px 12px;font-weight:900;letter-spacing:2.1px;text-transform:uppercase;font-size:12px}
+    .form-section{padding:75px 0 95px;position:relative}
+    .form-section::before{content:'✦';position:absolute;color:#e7bb7d;top:25px;left:5%;font-size:39px}
+    .section-heading{text-align:center;max-width:680px;margin:0 auto 34px}
+    .section-heading .small{font-weight:900;letter-spacing:2px;font-size:12px;text-transform:uppercase;color:var(--rojo)}
+    h2 {font-family:Impact,"Arial Narrow","Arial Black",sans-serif;font-size:clamp(38px,5vw,60px);font-weight:900;text-transform:uppercase;line-height:1;letter-spacing:.2px;margin:9px 0 14px}
+    .section-heading p{margin:0;color:#76564e;font-size:16px}
+    .app {display:grid;grid-template-columns:1.02fr .98fr;gap:24px;align-items:stretch}
+    .form-card,.result-card {border-radius:24px;overflow:hidden;box-shadow:var(--sombra)}
+    .form-card {background:white;padding:32px;position:relative;border:1px solid #f0dfd1}
+    .form-card h3 {margin:0 0 25px;font-family:Impact,"Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.5px;font-size:27px;color:var(--vino)}
+    .field {margin-bottom:22px}
+    .field label{display:block;font-weight:900;font-size:15px;margin:0 0 9px;color:#5c3027}
+    .field .hint {font-size:12px;color:#93766a;font-weight:normal;display:block;margin-top:4px}
+    .row-halves{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    select,input[type=text],input[type=number],input[type=date]{width:100%;min-width:0;border:2px solid #e9d8c8;background:#fffcf7;border-radius:12px;padding:13px 14px;color:#503028;outline:none;min-height:49px;transition:border .2s}
+    select:focus,input:focus{border-color:#db6758;box-shadow:0 0 0 3px #f8d3cb}
+    .pills {display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .pill {display:grid;place-content:center;min-height:66px;padding:8px;border-radius:12px;border:2px solid #e6d8cb;background:#fffdf8;color:#6e453b;transition:all .2s;font-weight:900;text-align:center;font-size:21px}
+    .pill small{font-size:11px;font-weight:700;color:#95776a;margin-top:2px}
+    .pill[aria-pressed=true]{background:#fff1c9;border-color:#c0342f;color:#a72a26;box-shadow:0 2px 0 #c0342f}
+    .pill[aria-pressed=true] small{color:#a72a26}
+    .helper{background:#fbf2e5;border-left:4px solid #f3ae64;padding:12px 14px;font-size:12px;border-radius:8px;color:#745245}
+    .result-card {background:var(--verde);color:#fff5dd;display:flex;flex-direction:column;position:relative;min-height:515px}
+    .result-card::before{content:"";position:absolute;inset:0;opacity:.075;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:18px 18px;pointer-events:none}
+    .result-main{padding:31px 31px 25px;position:relative;flex:1}
+    .result-tag {display:inline-block;padding:7px 13px;border-radius:99px;background:#fedb8b;color:#6f3425;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+    .result-title {font-family:Impact,"Arial Narrow",sans-serif;line-height:1.05;text-transform:uppercase;font-size:clamp(30px,3.4vw,43px);margin:18px 0 10px}
+    .result-title span{color:#ffcf6d}
+    .big-count{font-family:Impact,"Arial Narrow",sans-serif;font-size:clamp(45px,6vw,74px);letter-spacing:.5px;color:#fff4de;line-height:1.1}
+    .big-count small{font-family:"Trebuchet MS",Arial,sans-serif;font-size:17px;font-weight:700}
+    .combo {font-size:14px;color:#e2e9d6;line-height:1.6;min-height:42px;margin-top:8px}
+    .total-strip {background:#124233;padding:19px 30px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative}
+    .total-strip span {font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#d0e2c9;font-weight:900}
+    .total {font-family:Impact,"Arial Narrow",sans-serif;font-size:40px;letter-spacing:1px;white-space:nowrap}
+    .order-bottom{background:#faf0d7;padding:23px 30px 29px;color:#6d392f;position:relative}
+    .order-bottom .extra {font-size:13px;margin:0 0 14px;font-weight:800;color:#92513e}
+    .wa-btn {display:flex;width:100%;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px 14px;border:0;border-radius:13px;background:#21a767;color:#fff;font-size:15px;font-weight:900;box-shadow:0 5px 0 #16754b;transition:transform .2s}
+    .wa-btn:hover {transform:translateY(-2px)}
+    .wa-btn:focus-visible,.hero-cta:focus-visible,.pill:focus-visible {outline:3px solid #f6c16b;outline-offset:3px}
+    .fineprint{font-size:11px;line-height:1.5;color:#836f60;margin:14px 0 0;text-align:center}
+    .setup-message{display:none;background:#fff4e7;border:1px solid #e7bb7b;border-radius:10px;padding:11px;margin-top:14px;font-size:12px;color:#79442f}
+    .setup-message.show{display:block}
+    .setup-message button {border:0;background:#723b2a;color:white;border-radius:7px;padding:6px 10px;font-size:12px;margin-top:8px}
+    .how {padding:0 0 80px;text-align:center}
+    .how h2 {font-size:35px;color:var(--vino)}
+    .steps {display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}
+    .step {border:1px solid #efdece;border-radius:18px;background:#fffefa;padding:23px 17px;box-shadow:0 9px 25px rgba(94,38,23,.05)}
+    .step .num {display:grid;place-content:center;width:44px;height:44px;border-radius:50%;background:#e9443b;color:white;font-family:Impact,sans-serif;font-size:23px;margin:0 auto 13px}
+    .step strong {display:block;color:var(--vino);margin-bottom:7px}
+    .step p {margin:0;color:#836c5f;font-size:13px}
+    .footer {background:#77272b;color:#fce7d5;padding:29px 0}
+    .footer-content{display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .footer strong {font-family:Georgia,serif;font-style:italic;font-size:20px}
+    .footer span {font-size:12px;color:#f0c6b6}
+    .foot-note {margin:10px 0 0;color:#f0c6b6;font-size:11px}
+    @media(max-width:870px){.hero-flex{grid-template-columns:1fr 1fr}.hero h1{font-size:clamp(55px,8vw,85px)}.app{grid-template-columns:1fr}.form-card,.result-card{max-width:660px;width:100%;margin:auto}.result-card{min-height:0}.result-main{padding-bottom:26px}}
+    @media(max-width:640px){.wide{padding:0 18px}.hero{min-height:0}.nav{min-height:77px}.nav-tag{font-size:9px;padding:8px 10px;letter-spacing:.8px}.hero-flex{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding-top:35px;padding-bottom:44px}.eyebrow{font-size:10px;margin-bottom:15px}.hero h1{font-size:clamp(43px,12vw,65px);margin-bottom:15px}.intro{font-size:16px;max-width:340px;margin:0 auto 18px}.hero-note{margin-top:17px;font-size:9px}.art-wrap{width:min(370px,97%);margin-top:5px}.art-wrap svg{width:100%;max-width:390px}.ribbon{font-size:9px;letter-spacing:1px;padding:13px 6px}.form-section{padding:56px 0 65px}.section-heading h2{font-size:43px}.section-heading p{font-size:14px}.form-card{padding:23px 20px;border-radius:19px}.form-card h3{font-size:25px}.row-halves{grid-template-columns:1fr}.field{margin-bottom:21px}.result-main{padding:26px 24px 21px}.result-title{font-size:36px}.total-strip{padding:18px 24px}.order-bottom{padding:22px 23px 25px}.steps{grid-template-columns:1fr;gap:12px}.step{padding:17px;display:grid;grid-template-columns:45px 1fr;column-gap:15px;text-align:left}.step .num{grid-row:span 2;margin:0}.step strong{margin:1px 0 5px}.step p{grid-column:2}.how{padding-bottom:65px}.footer-content{flex-direction:column;align-items:flex-start}.footer span{line-height:1.45}}
+    @media(max-width:870px){.hero-title{max-width:440px}}
+    @media(max-width:640px){.brand-tab{width:104px;height:52px;padding-top:8px}.brand-tab img{width:78px}.nav{min-height:70px}.nav-tag{margin-top:16px}.hero-title{margin:0 auto 16px;max-width:340px}.hero-flex>div:first-child{display:flex;flex-direction:column;align-items:center}.art-wrap img{width:100%}.twinkle.t2{left:4px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-cta,.pill,.wa-btn{transition:none}}
+  </style>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="hero">
+      <nav class="nav wide" aria-label="Cabecera de Donde mi Amá">
+        <a class="brand" href="#inicio" aria-label="Donde mi Amá, inicio"><span class="brand-tab"><img src="assets/logo.png" alt="Donde mi Amá"></span></a>
+        <span class="nav-tag">Sabor de Popayán ✦ Navidad 2026</span>
+      </nav>
+      <div class="hero-flex wide" id="inicio">
+        <div>
+          <span class="eyebrow">¡Esta Navidad nadie se queda sin empanaditas!</span>
+          <h1><img class="hero-title" src="assets/titulo.png" alt="¡Se armó la Empanovena!"></h1>
+          <p class="intro">Tú pones el parche. Nosotros ponemos las empanaditas. Calcula cuántas necesitas para compartir. 🥟</p>
+          <a class="hero-cta" href="#calculadora">Armar mi Empanovena <span aria-hidden="true">↓</span></a>
+          <div class="hero-note">Tradición • sabor • practicidad</div>
+        </div>
+        <div class="art-wrap">
+          <span class="twinkle t1">✦</span><span class="twinkle t2">✳</span>
+          <img src="assets/empanadas.webp" alt="Plato de empanaditas de pipián">
+        </div>
+      </div>
+    </header>
+    <div class="ribbon">🥟 Precocidas · ❄ Congeladas · ❤️ Hechas con tradición</div>
+    <main>
+      <section id="calculadora" class="form-section wide" aria-labelledby="titulo-calculadora">
+        <div class="section-heading">
+          <span class="small">La parte más rica de organizar la novena</span>
+          <h2 id="titulo-calculadora">Arma tu pedido</h2>
+          <p>Cuéntanos cuántas personas van y nosotros te sugerimos una combinación de paquetes. Sin enredos ni cuentas de último minuto.</p>
+        </div>
+        <div class="app">
+          <form id="formulario" class="form-card" onsubmit="return false">
+            <h3>01. Cuéntanos tu plan</h3>
+            <div class="field">
+              <label for="nombre">¿Cómo te llamas? <span style="font-weight:400">(opcional)</span></label>
+              <input id="nombre" type="text" placeholder="Tu nombre" maxlength="60" autocomplete="given-name">
+            </div>
+            <div class="field">
+              <label for="ocasion">¿Qué estás organizando?</label>
+              <select id="ocasion"><option value="una novena navideña">🎄 Una novena navideña</option><option value="una reunión familiar">❤️ Una reunión familiar</option><option value="una celebración">🎉 Una celebración</option><option value="un pedido para compartir en casa">🥟 Un antojito en casa</option></select>
+            </div>
+            <div class="field">
+              <label for="invitados">¿Cuántas personas van a comer?</label>
+              <input id="invitados" type="number" min="1" max="150" step="1" value="15" required inputmode="numeric">
+              <span class="hint">Puedes calcular para 1 a 150 personas.</span>
+            </div>
+            <div class="field">
+              <label>¿Cuántas empanaditas por persona?</label>
+              <div class="pills" role="group" aria-label="Empanadas por persona">
+                <button type="button" class="pill" data-rate="2" aria-pressed="false">2<small>Picadita</small></button>
+                <button type="button" class="pill" data-rate="3" aria-pressed="true">3<small>Para compartir</small></button>
+                <button type="button" class="pill" data-rate="4" aria-pressed="false">4<small>Buen antojo</small></button>
+              </div>
+            </div>
+            <div class="row-halves">
+              <div class="field"><label for="fecha">¿Para qué día? <span style="font-weight:400">(opcional)</span></label><input id="fecha" type="date" min="2026-11-17"></div>
+              <div class="field"><label for="entrega">¿Cómo lo recibirás?</label><select id="entrega"><option value="por definir">Por definir</option><option value="recoger">Recoger</option><option value="domicilio">Domicilio</option></select></div>
+            </div>
+            <div class="helper">💡 Calculamos una cantidad orientativa. Ajusta las empanaditas por persona según si habrá otros pasabocas o platos.</div>
+          </form>
+          <section class="result-card" aria-live="polite" aria-label="Recomendación de paquetes">
+            <div class="result-main">
+              <div class="result-tag">¡Encontramos tu combo ideal!</div>
+              <h3 class="result-title">Las empanaditas <span>no pueden faltar</span></h3>
+              <div class="big-count"><span id="total-unidades">46</span> <small>empanaditas</small></div>
+              <div class="combo" id="descripcion-combo">Paquete de 46 unidades.</div>
+              <p style="font-size:12px;color:#cfdfc9;margin:18px 0 0">Para <strong id="para-personas">15</strong> personas · Recomendación aproximada: <strong id="cantidad-necesaria">45</strong> empanadas</p>
+            </div>
+            <div class="total-strip"><span>Tu pedido estimado</span><strong class="total" id="total-precio">$20.000</strong></div>
+            <div class="order-bottom">
+              <p class="extra" id="dato-extra">❤️ Más empanaditas para compartir, al mejor precio disponible para esta cantidad.</p>
+              <button id="pedir" type="button" class="wa-btn"><span aria-hidden="true">✆</span> Solicitar pedido por WhatsApp ↗</button>
+              <div id="aviso-config" class="setup-message" role="status">Esta versión de prueba necesita el número de WhatsApp del negocio para abrir directamente el chat. Ya copiamos el mensaje de pedido para que puedas pegarlo en la conversación. <button id="copiar-otra" type="button">Copiar nuevamente</button></div>
+              <p class="fineprint">Los precios son estimados según el catálogo. Pedido, fecha, disponibilidad y domicilio sujetos a confirmación por WhatsApp.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+      <section class="how wide" aria-label="Cómo funciona">
+        <h2>Tradición sin complicaciones</h2>
+        <div class="steps">
+          <div class="step"><div class="num">1</div><strong>Elige tu cantidad</strong><p>Dinos cuántas personas disfrutarán las empanaditas.</p></div>
+          <div class="step"><div class="num">2</div><strong>Recibe tu recomendación</strong><p>Te mostramos los paquetes convenientes para tu reunión.</p></div>
+          <div class="step"><div class="num">3</div><strong>Pide por WhatsApp</strong><p>Confirmamos disponibilidad, entrega y detalles contigo.</p></div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><div class="wide"><div class="footer-content"><strong>Donde mi Amá ❤️</strong><span>Empanaditas de pipián precocidas y congeladas · Popayán, Colombia</span></div><p class="foot-note">Una recomendación no constituye una reserva confirmada.</p></div></footer>
+  </div>
+  <script>
+    // ============================================================
+    // WhatsApp Business de Donde mi Amá (Colombia +57).
+    // Número para recibir solicitudes de pedido desde la calculadora.
+    // ============================================================
+    const WHATSAPP_NUMBER = "573126311292";
+    const PACKAGES = [
+      { units: 22, price: 10000 },
+      { units: 46, price: 20000 },
+      { units: 70, price: 30000 },
+      { units: 94, price: 40000 },
+      { units: 120, price: 50000 }
+    ];
+    const peso = value => "$" + Number(value).toLocaleString("es-CO");
+    const $ = id => document.getElementById(id);
+    let rate = 3;
+    let lastMessage = "";
+    function bestCombination(required) {
+      // Cada paquete cuesta múltiplos de $10.000.
+      // Priorizamos el precio más bajo; para igual precio, más unidades
+      // y finalmente menos bolsas de compra/paquetes.
+      const maxCostSteps = Math.ceil(required/120)*5 + 10;
+      const dp = Array(maxCostSteps+1).fill(null);
+      dp[0] = {units:0, items:[]};
+      for (let c=1;c<=maxCostSteps;c++) {
+        for (const pkg of PACKAGES) {
+          const step = pkg.price/10000;
+          if (step>c || !dp[c-step]) continue;
+          const candidate = {units:dp[c-step].units+pkg.units, items:[...dp[c-step].items,pkg]};
+          if (!dp[c] || candidate.units>dp[c].units || (candidate.units===dp[c].units && candidate.items.length<dp[c].items.length)) dp[c]=candidate;
+        }
+        if (dp[c] && dp[c].units>=required) return {...dp[c], price:c*10000};
+      }
+      throw Error("No se encontró una combinación de paquetes");
+    }
+    function summarize(items) {
+      const count=new Map();
+      for (const p of items) count.set(p.units,(count.get(p.units)||0)+1);
+      return [...count].sort((a,b)=>b[0]-a[0]).map(([u,n])=>`${n} ${n===1?'paquete':'paquetes'} de ${u} unidades`).join(' + ');
+    }
+    function buildMessage(people,required,recommendation) {
+      const date=$("fecha").value;
+      const when = date ? new Date(date+'T12:00:00').toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'}):'por definir';
+      const name=$("nombre").value.trim();
+      return `¡Hola, Donde mi Amá! 🥟❤️${name?`\nSoy ${name}.`:''}\n\nQuiero consultar un pedido para ${$("ocasion").value}.\n👨‍👩‍👧‍👦 Personas: ${people}\n🥟 Estimación: ${rate} empanaditas por persona (${required} en total)\n📦 Combo sugerido: ${summarize(recommendation.items)} (${recommendation.units} empanaditas)\n💰 Precio estimado: ${peso(recommendation.price)}\n📅 Fecha: ${when}\n📍 Entrega: ${$("entrega").value}\n\n¿Me confirman disponibilidad y el valor final con entrega, si aplica?`;
+    }
+    function update() {
+      const raw=Number.parseInt($("invitados").value,10);
+      const people=Number.isFinite(raw)? Math.max(1,Math.min(150,raw)):15;
+      const required=people*rate;
+      const ideal=bestCombination(required);
+      $("total-unidades").textContent=ideal.units;
+      $("descripcion-combo").textContent=summarize(ideal.items)+".";
+      $("para-personas").textContent=people;
+      $("cantidad-necesaria").textContent=required;
+      $("total-precio").textContent=peso(ideal.price);
+      const extra = ideal.units-required;
+      const bonusVsBase=ideal.units-(ideal.price/10000)*22;
+      $("dato-extra").textContent=`❤️ ${extra} empanadita${extra!==1?'s':''} de margen para compartir.${bonusVsBase>0?` Incluye ${bonusVsBase} más que comprar el mismo valor solo en paquetes de $10.000.`:''}`;
+      lastMessage=buildMessage(people,required,ideal);
+      $("aviso-config").classList.remove('show');
+    }
+    document.querySelectorAll('[data-rate]').forEach(el=>el.addEventListener('click',()=>{
+      rate=Number(el.dataset.rate);
+      document.querySelectorAll('[data-rate]').forEach(b=>b.setAttribute('aria-pressed', String(b===el)));
+      update();
+    }));
+    ['nombre','invitados','fecha','ocasion','entrega'].forEach(id=>$(id).addEventListener('input',update));
+    async function copyMessage(){
+      try{await navigator.clipboard.writeText(lastMessage)}
+      catch{const area=document.createElement('textarea');area.value=lastMessage;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove()}
+    }
+    $("pedir").addEventListener('click',async()=>{
+      const phone=WHATSAPP_NUMBER.replace(/\D/g,'');
+      if(phone.length>=10 && phone.length<=15){
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lastMessage)}`,'_blank','noopener,noreferrer');
+      }else{
+        await copyMessage();
+        $("aviso-config").classList.add('show');
+      }
+    });
+    $("copiar-otra").addEventListener('click',copyMessage);
+    update();
+  </script>
+</body>
+</html>
