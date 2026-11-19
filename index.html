@@ -56,8 +56,12 @@
     .row-halves{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     select,input[type=text],input[type=number],input[type=date]{width:100%;min-width:0;border:2px solid #e9d8c8;background:#fffcf7;border-radius:12px;padding:13px 14px;color:#503028;outline:none;min-height:49px;transition:border .2s}
     select:focus,input:focus{border-color:#db6758;box-shadow:0 0 0 3px #f8d3cb}
-    .pills {display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .pill {display:grid;place-content:center;min-height:66px;padding:8px;border-radius:12px;border:2px solid #e6d8cb;background:#fffdf8;color:#6e453b;transition:all .2s;font-weight:900;text-align:center;font-size:21px}
+    .pills {display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .custom-rate {display:flex;align-items:center;gap:12px;margin-top:12px}
+    .custom-rate[hidden]{display:none}
+    .custom-rate input{width:110px;flex:none;text-align:center;font-weight:900;font-size:20px}
+    .custom-rate .hint{margin:0}
+    .pill {display:grid;place-content:center;min-height:66px;padding:8px 4px;border-radius:12px;border:2px solid #e6d8cb;background:#fffdf8;color:#6e453b;transition:all .2s;font-weight:900;text-align:center;font-size:21px}
     .pill small{font-size:11px;font-weight:700;color:#95776a;margin-top:2px}
     .pill[aria-pressed=true]{background:#fff1c9;border-color:#c0342f;color:#a72a26;box-shadow:0 2px 0 #c0342f}
     .pill[aria-pressed=true] small{color:#a72a26}
@@ -154,6 +158,11 @@
                 <button type="button" class="pill" data-rate="2" aria-pressed="false">2<small>Picadita</small></button>
                 <button type="button" class="pill" data-rate="3" aria-pressed="true">3<small>Para compartir</small></button>
                 <button type="button" class="pill" data-rate="4" aria-pressed="false">4<small>Buen antojo</small></button>
+                <button type="button" class="pill" id="pill-otro" data-rate="otro" aria-pressed="false">Otro<small>Tú eliges</small></button>
+              </div>
+              <div id="rate-custom-box" class="custom-rate" hidden>
+                <input id="rate-custom" type="number" min="1" max="30" step="1" value="5" inputmode="numeric" aria-label="Empanaditas por persona">
+                <span class="hint">empanaditas por persona (de 1 a 30)</span>
               </div>
             </div>
             <div class="row-halves">
@@ -280,11 +289,27 @@
       lastMessage=buildMessage(people,required,ideal);
       $("aviso-config").classList.remove('show');
     }
+    let customMode=false;
+    function readCustomRate(){
+      const raw=Number.parseInt($("rate-custom").value,10);
+      return Number.isFinite(raw)? Math.max(1,Math.min(30,raw)) : null;
+    }
     document.querySelectorAll('[data-rate]').forEach(el=>el.addEventListener('click',()=>{
-      rate=Number(el.dataset.rate);
+      customMode = el.dataset.rate==='otro';
+      $("rate-custom-box").hidden = !customMode;
+      if(customMode){ rate = readCustomRate() || rate; $("rate-custom").focus(); $("rate-custom").select(); }
+      else rate = Number(el.dataset.rate);
       document.querySelectorAll('[data-rate]').forEach(b=>b.setAttribute('aria-pressed', String(b===el)));
       update();
     }));
+    $("rate-custom").addEventListener('input',()=>{
+      const v=readCustomRate();
+      if(v!==null){ rate=v; update(); }
+    });
+    $("rate-custom").addEventListener('blur',()=>{
+      const v=readCustomRate();
+      $("rate-custom").value = v!==null ? v : rate;
+    });
     ['nombre','invitados','fecha','ocasion','entrega'].forEach(id=>$(id).addEventListener('input',update));
     async function copyMessage(){
       try{await navigator.clipboard.writeText(lastMessage)}
